@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | FamilySearch_MeetMyAncestors_07-07-2020</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="TemplateData/UnityProgress.js"></script>
+    <script src="Build/UnityLoader.js"></script>
+    <script>
+      let unityInstance = UnityLoader.instantiate("unityContainer", "Build/WebBuild.json", {onProgress: UnityProgress});
+      let authUrl = '';
+      let appKey = '';
+      waitForAppKey();
+
+      function waitForAppKey() {
+        if (appKey) {
+          gameLoaded(appKey);
+          return;
+        }
+        setTimeout(waitForAppKey, 1000);
+      }
+      
+      function setAppKey(key) {
+        appKey = key;
+      }
+      
+      function gameLoaded(appKey) {
+        let redirect = window.location.href.split('?')[0];
+        if (redirect.includes('127.0.0.1'))
+          redirect = 'http://localhost:8080/index.html';
+        // authUrl = "https://ident.familysearch.org/cis-web/oauth2/v3/authorization?response_type=code&scope=openid%20profile%20email%20qualifies_for_affiliate_account%20country&client_id=" + appKey + "&redirect_uri=" + redirect;
+        authUrl = "https://identbeta.familysearch.org/cis-web/oauth2/v3/authorization?response_type=code&scope=openid%20profile%20email%20qualifies_for_affiliate_account%20country&client_id=" + appKey + "&redirect_uri=" + redirect;
+        
+        let code = new URLSearchParams(window.location.search).get('code');
+        document.getElementById('loginButton').disabled = false;
+        if (code) {
+          fetch('https://identbeta.familysearch.org/cis-web/oauth2/v3/token?redirect_uri=' + redirect, {
+            method: "POST",
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'grant_type=authorization_code&code=' + code + '&client_id=' + appKey
+          })
+          .then(function(rsp) { return rsp.json(); })
+          .then(function(obj) {
+            unityInstance.SendMessage('GameManager', 'SetAccessToken', obj.access_token);
+          });
+        }
+      }
+      
+      function sso() {
+        window.location.href = authUrl;
+      }
+    </script>
+  </head>
+  <body>
+    <p></p>
+    <button id="loginButton" disabled onclick="sso()">Login</button>
+    <div class="webgl-content">
+      <div id="unityContainer" style="width: 960px; height: 600px"></div>
+      <div class="footer">
+        <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>
+        <div class="title">FamilySearch_MeetMyAncestors</div>
+      </div>
+    </div>
+  </body>
+</html>
