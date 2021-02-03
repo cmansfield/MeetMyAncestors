@@ -1,86 +1,233 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Meet My Ancestors</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-    <script src="TemplateData/UnityProgress.js"></script>
-    <script src="Build/UnityLoader.js"></script>
-    <script>
-      let unityInstance = UnityLoader.instantiate("unityContainer", "Build/WebBuild.json", {onProgress: UnityProgress});
-      // const baseUrl = 'https://ident.familysearch.org/';
-      const baseUrl = 'https://identbeta.familysearch.org/';
-      let redirect = '';
-      let authUrl = '';
-      let appKey = '';
-      waitForAppKey();
+<html lang="en">
 
-      function waitForAppKey() {
-        if (appKey) {
-          gameLoaded(appKey);
-          return;
-        }
-        setTimeout(waitForAppKey, 1000);
-      }
-      
-      function setAppKey(key) {
-        appKey = key;
-      }
-      
-      function gameLoaded(appKey) {
-        redirect = window.location.href.split('?')[0];
-        if (redirect.includes('127.0.0.1'))
-          redirect = 'http://localhost:8080/index.html';
-        authUrl = baseUrl + 'cis-web/oauth2/v3/authorization?response_type=code&scope=openid%20profile%20email%20qualifies_for_affiliate_account%20country&client_id=' + appKey + '&redirect_uri=' + redirect;
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+	<!-- Head content such as meta tags and encoding options, etc -->
+	
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="robots" content="index, follow" />
+		<meta name="generator" content="RapidWeaver" />
+		
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Main Page | Meet My Ancestors">
+	<meta name="twitter:url" content="http://cmansfield.github.io/MeetMyAncestors/index.html">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Meet My Ancestors">
+	<meta property="og:title" content="Main Page | Meet My Ancestors">
+	<meta property="og:url" content="http://cmansfield.github.io/MeetMyAncestors/index.html">
+
+	<!-- User defined head content -->
+	
+
+  <!-- Browser title -->
+	<title>Main Page | Meet My Ancestors</title>
+
+  <!-- Main Theme Stylesheet -->
+	<link rel="stylesheet" type="text/css" media="all" href="rw_common/themes/Foundry/consolidated.css?rwcache=633991403" />
+		
+
+	<!-- RapidWeaver Color Picker Stylesheet -->
+	
+
+	<!-- Plugin injected code -->
+			<link rel='stylesheet' type='text/css' media='all' href='rw_common/plugins/stacks/stacks.css?rwcache=633991403' />
+		<link rel='stylesheet' type='text/css' media='all' href='files/stacks_page_page0.css?rwcache=633991403' />
+        <script type='text/javascript' charset='utf-8' src='rw_common/plugins/stacks/jquery-2.2.4.min.js?rwcache=633991403'></script>
         
-        let code = new URLSearchParams(window.location.search).get('code');
-        document.getElementById('authButton').disabled = false;
-        if (code) {
-          fetch(baseUrl + 'cis-web/oauth2/v3/token?redirect_uri=' + redirect, {
-            method: "POST",
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: 'grant_type=authorization_code&code=' + code + '&client_id=' + appKey
-          })
-          .then(function(rsp) { return rsp.json(); })
-          .then(function(obj) {
-            unityInstance.SendMessage('GameManager', 'SetAccessToken', obj.access_token);
-            document.getElementById('authButton').innerText = 'Logout';
-            document.getElementById('authButton').setAttribute( "onclick", "logout()" );
-          });
-        }
-      }
-      
-      function logout() {
-        // fetch(baseUrl + '', {
-        //   method: 'POST',
-        //   body: '',
-        // })
-        // .then(function(resp) {
-        //   console.log('logged out');
-        // });
-        // const params = new URLSearchParams(window.location.search);
-        // params.delete('code');
-        // document.getElementById('authButton').innerText = 'Login';
-        // document.getElementById('authButton').setAttribute( "onclick", "sso()" );
-          window.location.href = redirect;
-      }
-      
-      function sso() {
-        window.location.href = authUrl;
-      }
-    </script>
-  </head>
-  <body>
-    <p></p>
-    <button id="authButton" disabled onclick="sso()">Login</button>
-    <div class="webgl-content">
-      <div id="unityContainer" style="width: 960px; height: 600px"></div>
-      <div class="footer">
-        <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>
-        <div class="title">Meet My Ancestors</div>
-      </div>
-    </div>
-  </body>
+        <link rel="stylesheet" href="rw_common/plugins/stacks/font-awesome.min.css?rwcache=633991403">
+        
+		
+		<script type='text/javascript' charset='utf-8' src='files/stacks_page_page0.js?rwcache=633991403'></script>
+        <meta name="formatter" content="Stacks v4.1.4 (5385)" >
+		<meta class="stacks4 stack version" id="com.elixir.stacks.foundry" name="Foundry" content="2.0.1.0">
+		<meta class="stacks4 stack version" id="com.elixir.stacks.foundryColumns" name="Columns" content="2.0.1.0">
+		<meta class="stacks4 stack version" id="com.elixir.stacks.foundryBanner" name="Banner" content="2.0.1.0">
+		<meta class="stacks4 stack version" id="com.elixir.stacks.foundryHeader" name="Header" content="2.0.1.0">
+		<meta class="stacks4 stack version" id="com.elixir.stacks.foundryContainer" name="Container" content="2.0.1.0">
+		<meta class="stacks4 stack version" id="com.elixir.stacks.foundryButton" name="Button" content="2.0.1.0">
+		
+
+
+</head>
+
+<body class="antialiased">
+  <div class="blur_wrapper">
+
+  	
+<div id='stacks_out_1' class='stacks_top'><div id='stacks_in_1' class=''><div id='stacks_out_2' class='stacks_out'><div id='stacks_in_2' class='stacks_in com_elixir_stacks_foundry_stack'>
+
+
+
+
+<!-- Foundry -->
+
+
+</div></div><div id='stacks_out_8' class='stacks_out'><div id='stacks_in_8' class='stacks_in com_elixir_stacks_foundryHeader_stack'>
+
+<div class="text-xs-left">
+	
+	<h2 class="color_picker  ">Welcome to Meet My Ancestors</h2>
+	
+</div>
+</div></div><div id='stacks_out_5' class='stacks_out'><div id='stacks_in_5' class='stacks_in com_elixir_stacks_foundryBanner_stack'>
+
+
+<div class="nav_pairing">
+	<div class="banner">
+			<div class="banner_inner">
+				<div class="banner_content">
+					<div class="container">
+						<div id='stacks_out_16' class='stacks_out'><div id='stacks_in_16' class='stacks_in com_elixir_stacks_foundryColumns_stack'>
+
+
+
+<div class="row   equal">
+
+
+	<!-- Column One -->
+	<div class="foundry_column foundry_column_one  col-xs-12 col-md-6 col-lg-6"><div class="inner_column_content"><div id='stacks_out_27' class='stacks_out'><div id='stacks_in_27' class='stacks_in com_elixir_stacks_foundryContainer_stack'>
+
+
+<div class="container">
+	
+		<div id='stacks_out_29' class='stacks_out'><div id='stacks_in_29' class='stacks_in text_stack'><span id='stacks_in_30'><span style="color:#FEFEFE;">The game requires you to login to your Family Search account.  When the login button on the next page is pressed, it will take you to your Family Search login.  Once logged in, you will be automatically directed to the game.</span></span></div></div>
+	
+</div>
+</div></div></div></div>
+
+
+
+	<!-- Column Two -->
+	<div class="foundry_column foundry_column_two  col-xs-12 col-md-6 col-lg-6"><div class="inner_column_content"><div class='slice empty out'><div class='slice empty in'></div></div></div></div>
+
+
+
+
+
+
+
+</div>
+</div></div>
+					</div>
+				</div>
+			</div>
+
+			
+	</div>
+
+		
+</div>
+</div></div><div id='stacks_out_11' class='stacks_out'><div id='stacks_in_11' class='stacks_in com_elixir_stacks_foundryHeader_stack'>
+
+<div class="text-xs-center">
+	
+	<h3 class="color_picker  ">A New Way to Explore Your Family Tree</h3>
+	
+</div>
+</div></div><div id='stacks_out_14' class='stacks_out'><div id='stacks_in_14' class='stacks_in com_elixir_stacks_foundryBanner_stack'>
+
+
+<div class="nav_pairing">
+	<div class="banner">
+			<div class="banner_inner">
+				<div class="banner_content">
+					<div class="container">
+						<div id='stacks_out_31' class='stacks_out'><div id='stacks_in_31' class='stacks_in com_elixir_stacks_foundryColumns_stack'>
+
+
+
+<div class="row   equal">
+
+
+	<!-- Column One -->
+	<div class="foundry_column foundry_column_one  col-xs-12 col-md-6 col-lg-6"><div class="inner_column_content"><div id='stacks_out_7' class='stacks_out'><div id='stacks_in_7' class='stacks_in com_elixir_stacks_foundryButton_stack'>
+
+<div class="button-base-margin text-xs-center">
+<!-- a role="button" href="https://nam10.safelinks.protection.outlook.com/?url=https%3A%2F%2Fcmansfield.github.io%2FMeetMyAncestors%2F&data=04%7C01%7Cmisbach%40familysearch.org%7C49280dc592994e7e195308d8c78cec6a%7C61e6eeb35fd74aaaae3c61e8deb09b79%7C0%7C0%7C637478755367565874%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&sdata=WOSbCylrabW4m0Tj4vK1KwUn0Mf%2F%2FaZwrjDZTpoodgE%3D&reserved=0" rel="" onclick="" target="" id="" class=" btn btn-lg   " >Play Meet My Ancestors!</a-->
+<a role="button" href="game.html" rel="" onclick="" target="" id="" class=" btn btn-lg   " >Play Meet My Ancestors!</a>
+</div></div></div></div></div>
+
+
+
+	<!-- Column Two -->
+	<div class="foundry_column foundry_column_two  col-xs-12 col-md-6 col-lg-6"><div class="inner_column_content"><div id='stacks_out_34' class='stacks_out'><div id='stacks_in_34' class='stacks_in com_elixir_stacks_foundryContainer_stack'>
+
+
+<div class="container">
+	
+		<div id='stacks_out_36' class='stacks_out'><div id='stacks_in_36' class='stacks_in text_stack'><span id='stacks_in_37'><span style="color:#FEFEFE;">The game will be web based and open in a new tab.<br />Create a game profile and avatar.<br />The game will download your family tree.<br />You can visit with the other characters and visit the home.  Press the space bar to interact.</span></span></div></div>
+	
+</div>
+</div></div></div></div>
+
+
+
+
+
+
+
+</div>
+</div></div>
+					</div>
+				</div>
+			</div>
+
+			
+	</div>
+
+		
+</div>
+</div></div><div id='stacks_out_38' class='stacks_out'><div id='stacks_in_38' class='stacks_in com_elixir_stacks_foundryContainer_stack'>
+
+
+<div class="container">
+	
+		<div id='stacks_out_40' class='stacks_out'><div id='stacks_in_40' class='stacks_in text_stack'>Game design by RJM Design.  For more information contact: Randy Mansfield at randy@rjmdesignco.com<br /></div></div><div id='stacks_out_42' class='stacks_out'><div id='stacks_in_42' class='stacks_in text_stack'>Some of the game character designs were acquired from Stardew Valley for the purpose of the proof of concept only.  The actual game will have uniquely designed characters to fit the era.  Stardew Valley copyrighted and owned by ConcernedApe LLC.<br /></div></div>
+	
+</div>
+</div></div></div></div>
+
+
+  </div>
+
+  <!-- Base RapidWeaver Javascript -->
+  <script src="rw_common/themes/Foundry/javascript.js?rwcache=633991403"></script>
+
+  <!-- Load jQuery -->
+  <script src="rw_common/themes/Foundry/js/jquery.min.js?rwcache=633991403"></script>
+
+  <!-- Tether.js || used for tooltips -->
+	<script src="rw_common/themes/Foundry/js/tether.min.js?rwcache=633991403"></script>
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="rw_common/themes/Foundry/js/bootstrap.min.js?rwcache=633991403"></script>
+
+	<!-- Style variations -->
+	
+
+	<!-- User defined javascript -->
+	
+
+  <!-- User defined styles -->
+	
+
+	<script>
+		// Initializes dropdowns
+		$('.dropdown-toggle').dropdown();
+
+		// Initializes popovers
+		$(function () {
+		  $('[data-toggle="popover"]').popover()
+		});
+	</script>
+
+  <!-- Foundry theme v1.0.1 -->
+
+</body>
+
 </html>

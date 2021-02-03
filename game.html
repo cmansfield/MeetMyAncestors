@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Meet My Ancestors</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <link rel='stylesheet' type='text/css' media='all' href='files/stacks_page_page0.css?rwcache=633991403' />
+    <script src="TemplateData/UnityProgress.js"></script>
+    <script src="Build/UnityLoader.js"></script>
+    <script>
+      let unityInstance = UnityLoader.instantiate("unityContainer", "Build/WebBuild.json", {onProgress: UnityProgress});
+      // const baseUrl = 'https://ident.familysearch.org/';
+      const baseUrl = 'https://identbeta.familysearch.org/';
+      let redirect = '';
+      let authUrl = '';
+      let appKey = '';
+      waitForAppKey();
+
+      function waitForAppKey() {
+        if (appKey) {
+          gameLoaded(appKey);
+          return;
+        }
+        setTimeout(waitForAppKey, 1000);
+      }
+      
+      function setAppKey(key) {
+        appKey = key;
+      }
+      
+      function gameLoaded(appKey) {
+        redirect = window.location.href.split('?')[0];
+        authUrl = baseUrl + 'cis-web/oauth2/v3/authorization?response_type=code&scope=openid%20profile%20email%20qualifies_for_affiliate_account%20country&client_id=' + appKey + '&redirect_uri=' + redirect;
+        
+        let code = new URLSearchParams(window.location.search).get('code');
+        document.getElementById('authButton').disabled = false;
+        if (code) {
+          fetch(baseUrl + 'cis-web/oauth2/v3/token?redirect_uri=' + redirect, {
+            method: "POST",
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'grant_type=authorization_code&code=' + code + '&client_id=' + appKey
+          })
+          .then(function(rsp) { return rsp.json(); })
+          .then(function(obj) {
+            unityInstance.SendMessage('GameManager', 'SetAccessToken', obj.access_token);
+            // document.getElementById('authButton').innerText = 'Logout';
+            // document.getElementById('authButton').setAttribute( "onclick", "logout()" );
+            document.getElementById('authComponent').setAttribute("hidden", true);
+          });
+        }
+      }
+      
+      function logout() {
+        // fetch(baseUrl + '', {
+        //   method: 'POST',
+        //   body: '',
+        // })
+        // .then(function(resp) {
+        //   console.log('logged out');
+        // });
+        // const params = new URLSearchParams(window.location.search);
+        // params.delete('code');
+        // document.getElementById('authButton').innerText = 'Login';
+        // document.getElementById('authButton').setAttribute( "onclick", "sso()" );
+          window.location.href = redirect;
+      }
+      
+      function sso() {
+        window.location.href = authUrl;
+      }
+    </script>
+  </head>
+  <body>
+    <p></p>
+	<!--a role="button" href="game.html" rel="" onclick="" target="" id="" class=" btn btn-lg   " >Play Meet My Ancestors!</a-->
+    <div id="authComponent">
+      <div style="padding-top: 30px; padding-left: 50px">Click the button below to navigate to the FamilySearch website and log-in to your FamilySearch account to play this demo!</div>
+      <button id="authButton" disabled onclick="sso()" class="btn btn-lg" style="margin: 30px; margin-left: 55px; background-color: rgba(25, 156, 175, 1.00); color: rgba(255, 255, 255, 0.85)">FamilySearch Login</button>
+    </div>
+    <div class="webgl-content">
+      <div id="unityContainer" style="width: 960px; height: 600px"></div>
+      <div class="footer">
+        <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>
+        <div class="title">Meet My Ancestors</div>
+      </div>
+    </div>
+  </body>
+</html>
